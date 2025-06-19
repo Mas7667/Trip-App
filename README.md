@@ -26,6 +26,6 @@
 
 ## Captures d’écran
 
-*(Ajouter ici des captures d’écran significatives du site : tableau de bord, formulaire, liste des événements...)*
+*(Les captures d’écran significatives du site seront au fures et à mesures ajouter : tableau de bord, formulaire, liste des événements...)*
 
 ---
