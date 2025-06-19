@@ -1,0 +1,74 @@
+{% extends 'maitre.html' %}
+{% block contenu %}
+<h2>Liste des voyages</h2>
+{% if user.is_superuser %}
+    <a href="{% url 'voyage_ajouter' %}" class="btn btn-primary mb-3">+ Ajouter un voyage</a>
+{% endif %}
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Date</th>
+            <th>Durée</th>
+            <th>Prix</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for voyage in voyages %}
+        <tr>
+            <td>{{ voyage.titre }}</td>
+            <td>{{ voyage.date_depart }}</td>
+            <td>{{ voyage.duree }} jours</td>
+            <td>{{ voyage.prix }} $</td>
+            <td>
+    <div class="d-flex justify-content">
+        
+        <!-- Détail -->
+        <a href="{% url 'voyage_detail' voyage.pk %}" class="btn btn-sm btn-outline-info me-1" data-bs-toggle="tooltip" title="Détails du voyage">
+            <i class="bi bi-info-circle-fill"></i>
+        </a>
+
+        {% if user.is_superuser %}
+        <!-- Modifier -->
+        <a href="{% url 'voyage_modifier' voyage.pk %}" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="tooltip" title="Modifier le voyage">
+            <i class="bi bi-pencil-fill"></i>
+        </a>
+
+        <!-- Supprimer (modale) -->
+        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalSuppression{{ voyage.pk }}" title="Supprimer le voyage">
+            <i class="bi bi-trash-fill"></i>
+        </button>
+        {% endif %}
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="modalSuppression{{ voyage.pk }}" tabindex="-1" aria-labelledby="labelSuppression{{ voyage.pk }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="labelSuppression{{ voyage.pk }}">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous vraiment supprimer le voyage : <strong>{{ voyage.titre }}</strong> ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form method="post" action="{% url 'voyage_supprimer' voyage.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</td>
+
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">Aucun voyage enregistré.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

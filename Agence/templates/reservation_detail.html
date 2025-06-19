@@ -1,0 +1,12 @@
+{% extends 'maitre.html' %}
+{% block contenu %}
+<div class="container mt-4">
+    <h2>Détails de la réservation</h2>
+    <ul class="list-group mb-4">
+        <li class="list-group-item"><strong>Voyage :</strong> {{ reservation.voyage.titre }}</li>
+        <li class="list-group-item"><strong>Nombre de personnes :</strong> {{ reservation.nb_personnes }}</li>
+        <li class="list-group-item"><strong>Date de réservation :</strong> {{ reservation.date_reservation }}</li>
+    </ul>
+    <a href="{% url 'reservations_lists' %}" class="btn btn-secondary">Retour</a>
+</div>
+{% endblock %}

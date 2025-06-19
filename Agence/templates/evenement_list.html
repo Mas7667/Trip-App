@@ -1,0 +1,90 @@
+{% extends 'maitre.html' %}
+{% block contenu %}
+<h2>Liste des événements sportifs</h2>
+{% if user.is_superuser %}
+    <a href="{% url 'evenement_ajouter' %}" class="btn btn-secondary mb-3">+ Ajouter un événement</a>
+{% endif %}
+<!-- Filtres -->
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-6">
+        <select name="voyage" class="form-select" onchange="this.form.submit()">
+            <option value="">-- Tous les voyages --</option>
+            {% for v in voyages %}
+                <option value="{{ v.id }}" {% if v.id|stringformat:"s" == voyage_actif %}selected{% endif %}>{{ v.titre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <a href="{% url 'evenement_list' %}" class="btn btn-outline-secondary">Réinitialiser</a>
+    </div>
+</form>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Sport</th>
+            <th>Date</th>
+            <th>Ligue</th>
+            <th>Lieu</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for evt in evenements %}
+        <tr>
+            <td>{{ evt.nom }}</td>
+            <td>{{ evt.sport }}</td>
+            <td>{{ evt.date }}</td>
+            <td>{{ evt.ligue }}</td>
+            <td>{{ evt.lieu }}</td>
+            <td>
+                <div class="d-flex justify-content">
+                    <!-- Détail -->
+                    <a href="{% url 'evenement_detail' evt.pk %}" class="btn btn-sm btn-outline-info me-1" data-bs-toggle="tooltip" title="Détails de l'événement">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </a>
+
+                    {% if user.is_superuser %}
+                    <!-- Modifier -->
+                    <a href="{% url 'evenement_modifier' evt.pk %}" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="tooltip" title="Modifier l'événement">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+
+
+                    <!-- Supprimer (modale) -->
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalSuppressionEvt{{ evt.pk }}" title="Supprimer l'événement">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                    {% endif %}
+                </div>
+
+
+                <!-- Modale de suppression -->
+                <div class="modal fade" id="modalSuppressionEvt{{ evt.pk }}" tabindex="-1" aria-labelledby="labelSuppressionEvt{{ evt.pk }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="labelSuppressionEvt{{ evt.pk }}">Confirmer la suppression</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            <div class="modal-body">
+                                Voulez-vous vraiment supprimer l'événement : <strong>{{ evt.nom }}</strong> ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <form method="post" action="{% url 'evenement_supprimer' evt.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            </div>  
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">Aucun événement disponible.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'maitre.html' %}
+{% load static %}
+
+{% block contenu %}
+<div class="container mt-4">
+    <h2 class="mb-4">Mes réservations</h2>
+
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Voyage</th>
+                <th>Nombre de personnes</th>
+                <th>Date de réservation</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in reservation_list %}
+            <tr>
+                <td>{{ res.voyage.titre }}</td>
+                <td>{{ res.nb_personnes }}</td>
+                <td>{{ res.date_reservation }}</td>
+                <td>
+                    <div class="d-flex justify-content-end">
+                        <!-- Détail -->
+                        <a href="{% url 'reservation_detail' res.pk %}" class="btn btn-sm btn-outline-info me-1" data-bs-toggle="tooltip" title="Détails">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </a>
+                        
+                        <!-- Modifier -->
+                        <a href="{% url 'reservation_modifier' res.pk %}" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="tooltip" title="Modifier">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+
+
+                        <!-- Supprimer (modale) -->
+                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalSuppressionRes{{ res.pk }}" title="Supprimer">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+
+                    <!-- Modale suppression -->
+                    <div class="modal fade" id="modalSuppressionRes{{ res.pk }}" tabindex="-1" aria-labelledby="labelSuppressionRes{{ res.pk }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="labelSuppressionRes{{ res.pk }}">Confirmation de suppression</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Supprimer la réservation pour le voyage : <strong>{{ res.voyage.titre }}</strong> ?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <form method="post" action="{% url 'reservation_supprimer' res.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">Vous n’avez encore aucune réservation.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

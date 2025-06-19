@@ -1,0 +1,50 @@
+{% extends 'maitre.html' %}
+{% load static %}
+
+{% block contenu %}
+<div class="container py-4">
+    <h2 class="text-center mb-5">Bienvenue {{ user.username }} !</h2>
+
+    <div class="row justify-content-center">
+        <!-- Voyages -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <img class="h-50" src="https://www.acs-ami.com/fr/blog/wp-content/uploads/2015/07/inspiration-voyage.jpg" class="card-img-top" alt="Voyages sportifs">
+                <div class="card-body text-center">
+                <h5 class="card-title"><i class="bi bi-globe-americas"></i> Voyages</h5>
+                <p class="card-text">Explorez nos voyages sportifs organisés.</p>
+                <a href="{% url 'voyage_list' %}" class="btn btn-primary">Voir les voyages</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Événements sportifs -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <img class="h-50" src="https://www.ipsos.com/sites/default/files/inline-images/evenements_sportifs_et_societe.jpg" class="card-img-top" alt="Voyages sportifs">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="bi bi-trophy-fill"></i> Événements sportifs</h5>
+                    <p class="card-text">Gérez les matchs et compétitions liés à vos voyages sportifs.</p>
+                    <a href="{% url 'evenement_list' %}" class="btn btn-success">Voir les événements</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Réservations -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <img class="h-50" src="https://www.tourmag.com/photo/art/default/6425064-9695158.jpg?v=1395162183" class="card-img-top" alt="Voyages sportifs">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="bi bi-journal-text"></i> Réservations</h5>
+                    <p class="card-text">Consultez vos réservations ou suivez celles des clients.</p>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'reservation_admin_list' %}" class="btn btn-secondary">Les réservations</a>
+                    {% else %}
+                     <a href="{% url 'reservations_lists' %}" class="btn btn-secondary">Mes réservations</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'maitre.html' %}
+{% block contenu %}
+<div class="container mt-4">
+    <h2 class="mb-3">{{ evenement.nom }}</h2>
+
+    <ul class="list-group">
+        <li class="list-group-item"><strong>Sport :</strong> {{ evenement.sport|title }}</li>
+        <li class="list-group-item"><strong>Date :</strong> {{ evenement.date }}</li>
+        <li class="list-group-item"><strong>Ligue :</strong> {{ evenement.ligue }}</li>
+        <li class="list-group-item"><strong>Lieu :</strong> {{ evenement.lieu }}</li>
+        <li class="list-group-item"><strong>Description :</strong><br>{{ evenement.description }}</li>
+    </ul>
+
+    <div class="mt-4">
+        {% if user.is_superuser %}
+        <a href="{% url 'evenement_modifier' evenement.pk %}" class="btn btn-primary me-2">
+            <i class="bi bi-pencil-fill"></i> Modifier
+        </a>
+        {% endif %}
+        <a href="{% url 'evenement_list' %}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}
